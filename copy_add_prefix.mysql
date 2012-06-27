@@ -1,0 +1,33 @@
+-- copy tables in a database and add prefix
+DROP PROCEDURE IF EXISTS copytables;
+DELIMITER //
+CREATE PROCEDURE copytables()
+BEGIN
+  DECLARE done INT DEFAULT FALSE;
+  DECLARE tname CHAR(255);
+  DECLARE newname CHAR(255);
+  DECLARE tablecur CURSOR FOR SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = 'name_of_database';
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+  
+  OPEN tablecur;
+  
+  create_loop: LOOP
+	FETCH tablecur INTO tname;
+	IF done THEN
+	  LEAVE create_loop;
+	END IF;
+
+	-- Create the 'xyz_' prefixed tables.
+	SET @newtablecmd = CONCAT('CREATE TABLE name_of_database.xyz_', tname, ' LIKE name_of_database.', tname);
+	SET @insertcmd   = CONCAT('INSERT name_of_database.xyz_', tname, ' SELECT * FROM name_of_database.', tname);
+	PREPARE newstmt FROM @newtablecmd;
+	EXECUTE newstmt;
+	-- Can't prepare this if we didn't execute the previous prepared statment first:
+	PREPARE insstmt FROM @insertcmd;
+	EXECUTE insstmt;
+
+  END LOOP;
+  
+  CLOSE tablecur;
+END;
+//
