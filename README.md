@@ -9,3 +9,5 @@
 
 ) copy_add_prefix.mysql - MySQL Stored proc to duplicate
   tables in a DB and add a prefix to each table
+
+) ./strace_apache.sh -f -v -o strace.out
