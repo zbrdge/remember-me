@@ -250,7 +250,7 @@ def post_install():
 
     # here's why we don't need an fstab:
     run('zfs unmount -a')
-    run('zfs set mountpoint=legacy zroot')
+    run('zfs set mountpoint=/ zroot')
     run('zfs set mountpoint=/tmp zroot/tmp')
     run('zfs set mountpoint=/usr zroot/usr')
     run('zfs set mountpoint=/var zroot/var')
