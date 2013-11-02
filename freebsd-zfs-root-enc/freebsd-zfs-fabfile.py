@@ -267,12 +267,12 @@ def full_install():
     # in order.
     # once again, see the linked blog post:
     with settings(warn_only=True):
-        #execute(partition_setup)
-        #execute(ram_disk)
-        #execute(kernel_mods)
-        #execute(loader_partition)
-        #execute(key_gen)
-        #execute(geli_init)
-        #execute(build_root)
-        #execute(install_freebsd)
+        execute(partition_setup)
+        execute(ram_disk)
+        execute(kernel_mods)
+        execute(loader_partition)
+        execute(key_gen)
+        execute(geli_init)
+        execute(build_root)
+        execute(install_freebsd)
         execute(post_install)
