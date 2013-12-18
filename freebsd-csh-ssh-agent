@@ -1,0 +1,25 @@
+# SSH AGENT MGMT
+# --------------
+set AGENT_FILE = $HOME/.ssh/ssh_agent
+if ( -e $AGENT_FILE ) then 
+	source $AGENT_FILE
+
+	if ( $?SSH_AGENT_PID ) then
+           # Variable sourced, but no agent
+	   if ! { kill -0 $SSH_AGENT_PID >& /dev/null } then
+	      ssh-agent -c | grep -v echo > $AGENT_FILE
+	   endif   
+	endif
+else
+	# No agent file; kill any already running agent,
+	# start over
+	pkill ssh-agent
+	ssh-agent -c | grep -v echo > $AGENT_FILE
+	source $AGENT_FILE
+endif
+
+# Add logic here to decide when to add keys, etc.
+# Start a process to disable them periodically
+if ! { ssh-add -l >& /dev/null } then
+	ssh-add
+endif
